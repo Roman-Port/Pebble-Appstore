@@ -1,0 +1,376 @@
+<!DOCTYPE html> 
+<!--PBL_RIP_VER:0--> <!--Please do not move or remove the above line, as it might ne needed in the future--> 
+<html lang="en" >
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="pragma" content="no-cache" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		
+		<!-- Loader stylesheet -->
+		<style>
+			.loader_cover {
+				position: fixed; top:0; bottom:0; left:0; right:0; background-color:#f7f7f7; z-index:9999;
+			}
+
+			.loader_timeout_contianer {
+				position: absolute; bottom:20px; width:100%;
+			}
+
+			.loader_timeout_text {
+				color:#636363; max-width:500px; width:100%; margin:auto; text-align: center; font-family: 'd-din';
+			}
+		</style>
+
+		<link rel="stylesheet" href="assets/v1/style_frontpage_mobile.css">
+		<link rel="stylesheet" href="assets/v1/shared.css">
+		<link rel="stylesheet" id="desktop_css" href="assets/v1/style_frontpage_desktop.css">
+		<link rel="stylesheet" id="night_css" disabled="true" href="assets/v1/night.css">
+
+		<link href="https://fonts.googleapis.com/css?family=Roboto:300,400" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css?family=PT+Sans" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css?family=IBM+Plex+Mono" rel="stylesheet">
+		<link rel="apple-touch-icon" sizes="180x180" href="resources/fav/apple-touch-icon.png">
+		<link rel="icon" type="image/png" sizes="32x32" href="resources/fav/favicon-32x32.png">
+		<link rel="icon" type="image/png" sizes="16x16" href="resources/fav/favicon-16x16.png">
+		<link rel="manifest" href="resources/fav/site.webmanifest">
+		<link rel="mask-icon" href="resources/fav/safari-pinned-tab.svg" color="#5bbad5">
+		<link rel="shortcut icon" href="resources/fav/favicon.ico">
+		<meta name="msapplication-TileColor" content="#da532c">
+		<meta name="msapplication-config" content="resources/fav/browserconfig.xml">
+		<meta name="theme-color" content="#ffffff">
+		<!-- End icon crap --> 
+
+		<!-- Load Flickity CSS --> <link rel="stylesheet" href="https://romanport.com/api/PebbleRipper/assets/flickity.css">
+		<title>PebbleRipper Appstore - Loading...</title>
+	</head>
+	<body style="margin:0;">
+
+		<!-- Loader --> 
+		<div id="loading_cover" class="loader_cover">
+			<div class="element-animation"></div>
+			<div class="loader_timeout_contianer">
+				<div class="loader_timeout_text">
+					<span id="loader-error-timeout" style="display:none;">Huh. Loading is taking longer than expected. You could try reloading. If that doesn't work, clear your cache and tell me about it on Discord. RomanPort#0001 <br><u onclick="RevealAppsList();">Force Hide Loader</u></span>
+				</div>
+			</div>
+		</div>
+		<!-- End loader -->
+
+		<!-- Top Message Bar --> 
+		<div class="top_msg" id="msg-bar"> This message should never appear! </div>
+		<!-- End Top Message Bar --> 
+		<div id="hiddenDevData" style="display:none; width:0; height:0;">
+			<!-- This is never shown. It is copied out of to display dev info --> 
+			<div style="font-size: 25px;">Developer Tools</div>
+			<br> This section may be buggy or ugly. Proceed with caution.<br> If you wish not to be a developer, you can disable it <u onclick="DisableDeveloper(); CustomAreaToggle();">here</u>. <br><br> 
+			<div style="font-size: 25px;">JavaScript Console</div>
+			<br> You can run JavaScript functions here. Try not to break something! <br><br> 
+			<div>
+				<textarea style=" display: block; width: 100%; background-color: #404040; border: 2px solid #4a4949; height: 200px; color: white; font-family: 'IBM Plex Mono', monospace; " ></textarea>
+				<div>Output:</div>
+				<div class="pebble_classic_button" onclick="DevToolsRunJS(this);" style="margin: 0;margin-top: 5px;width:100px;"> Run </div>
+			</div>
+			<br> 
+			<div style="font-size: 25px;">Native Debugging</div>
+			<br> You can toggle alerts for native calls. This is helpful for debugging native calls.<br> Keep in mind that this won't persist across reloads. <br> 
+			<div class="pebble_classic_button" onclick="DevToolsToggleNative(true);" style="margin: 0;margin-top: 5px;width:100px;display: inline-block;"> On </div>
+			<div class="pebble_classic_button" onclick="DevToolsToggleNative(false);" style="margin: 0;margin-top: 5px;width:100px;display: inline-block;"> Off </div>
+			<div class="pebble_classic_button" onclick="DevToolsToggleNativeTest();" style="margin: 0;margin-top: 5px;width:100px;display: inline-block;"> Test </div>
+			<br> 
+			<br> 
+			<div style="font-size: 25px;">In Progress Features</div>
+			Some of these may break. Proceed with caution!<br>
+			<div class="pebble_classic_button" onclick="SetNightView(false);" style="margin: 0;margin-top: 5px;width:200px;display: inline-block; margin-right:5px;"> Night Mode - Off </div><div class="pebble_classic_button" onclick="SetNightView(true);" style="margin: 0;margin-top: 5px;width:200px;display: inline-block;"> Night Mode - On </div><br>
+			
+			<br> <br>
+			<div style="font-size: 25px;">Nuke Localstorage</div>
+			<br> <span style="color:#ff3c3c;">Warning! </span>This will wipe out settings, cache, news, and a few other things stored here.<br> This'll essentially reset the appstore to a fresh install. There is no confirmation of this action.<br> For when things go bad.<br> 
+			<div class="pebble_classic_button" onclick="DevToolsNukeStorage();" style="margin: 0;margin-top: 5px;width:200px;display: inline-block;"> Nuke 💥 Localstorage </div>
+			<br><br> 
+			<div style="font-size: 25px;">Webstorage</div>
+			<br> WebStorage was created to fix localstorage wipes on phone reboot. <br> %%WS_ID%%<br> 
+			<div class="pebble_classic_button" onclick="NukeWebStorageAndLocalStorage(self);" style="margin: 0;margin-top: 5px;width:300px;display: inline-block;"> Nuke 💥 Webstorage & Localstorage</div>
+		</div>
+		<!-- Updater --> 
+		<div class="updater_banner_moreinfo" id="updater_banner_more"> </div>
+		<div class="updater_banner" onclick="OpenUpdateCheckerMore();" style="display:none;" id="updater_banner"> This text should not appear. </div>
+		<!-- End Updater -->
+		
+		<!-- Dev build disclaimer --> 
+		<div style="position:fixed; bottom:0; left:0; z-index:10000000; font-family: 'd-din'; font-size:12px;"> Pre-Production Stage Build </div>
+		<!-- End dev build disclaimer -->
+		
+		<!-- Custom area --> 
+		<div class="newSortBg" id="customV1Bg"></div>
+		<div class="newSortBottom" id="customV1Bottom">
+			<div class="pebble_classic_button" style="margin:auto; width:300px;" onclick="HideCustomAreaV1Btn(); "> Okay </div>
+		</div>
+		<div class="newSortOuterContainer" id="customV1OuterContainer">
+			<div class="newSortInnerContainer" id="customV1InnerContainer">
+				<!-- Content goes here --> 
+			</div>
+		</div>
+		<!-- End custom area --> 
+		<!-- Floating desktop sort button--> <div class="materialLikeFloatingBtn mobileHidden" onclick="NewSortToggle();"> <img src="resources/filter_list.svg" alt="Filter" style="height:100%;"> </div>
+		
+		<!-- Sort v3 -->
+		<div class="newSortBg" id="newSortBg"></div>
+		<div class="newSortBottom" id="newSortBottom">
+			<div class="pebble_classic_button" style="margin:auto; width:300px;" onclick="NewSortButtonConfirm();"> Search </div>
+		</div>
+		<div class="newSortOuterContainer" id="newSortOuterContainer">
+			<div class="newSortInnerContainer" id="newSortInnerContainer">
+				<div class="horizSepContainer">
+					<div></div>
+					<span>Search Query</span>
+					<div></div>
+				</div>
+				<div class="newInputCategoryContainer">
+					<div class="newSortCategoryButton newSortCategoryInputButton newSortCategoryButtonToggle3">
+						<div class="newSortCategoryButtonInner"><input type="text" id="searchQueryMobileV3" class="newSortCategoryInputButtonText" oninput="NewSortQueryPages();" name="Query" placeholder="Search Query"></div>
+					</div>
+				</div>
+				<div id="sortV3CategorySelect">
+					<div class="horizSepContainer">
+						<div></div>
+						<span>Category</span>
+						<div></div>
+					</div>
+					<div class="newSortCategoryContainer">
+						<div class="newSortCategoryButton newSortCategoryButtonToggle0" id="searchUiV3_5261a8fb3b773043d500000c" onclick="NewSortButtonPressed(this,0,'5261a8fb3b773043d500000c');" style="color:#3db9e6;">
+							<div class="newSortCategoryButtonInner"><img src="resources/v1/cat_daily.svg" style="height:100%;" alt="Daily"> Daily </div>
+						</div>
+						<div class="newSortCategoryButton newSortCategoryButtonToggle0" id="searchUiV3_5261a8fb3b773043d500000f" onclick="NewSortButtonPressed(this,0,'5261a8fb3b773043d500000f');" style="color:#fdbf37;">
+							<div class="newSortCategoryButtonInner"><img src="resources/v1/cat_tau.svg" style="height:100%;" alt="Tools And Utilities"> Tools & Utilities </div>
+						</div>
+						<div class="newSortCategoryButton newSortCategoryButtonToggle0" id="searchUiV3_5261a8fb3b773043d5000001" onclick="NewSortButtonPressed(this,0,'5261a8fb3b773043d5000001');" style="color:#FF9000;">
+							<div class="newSortCategoryButtonInner"><img src="resources/v1/cat_notifications.svg" style="height:100%;" alt="Notifications"> Notifications </div>
+						</div>
+						<div class="newSortCategoryButton newSortCategoryButtonToggle0" id="searchUiV3_5261a8fb3b773043d5000008" onclick="NewSortButtonPressed(this,0,'5261a8fb3b773043d5000008');" style="color:#fc4b4b;">
+							<div class="newSortCategoryButtonInner"><img src="resources/v1/cat_remotes.svg" style="height:100%;" alt="Remotes"> Remotes </div>
+						</div>
+						<div class="newSortCategoryButton newSortCategoryButtonToggle0" id="searchUiV3_5261a8fb3b773043d5000004" onclick="NewSortButtonPressed(this,0,'5261a8fb3b773043d5000004');" style="color:#98D500;">
+							<div class="newSortCategoryButtonInner"><img src="resources/v1/cat_health.svg" style="height:100%;" alt="Health And Fitness"> Heath & Fitness </div>
+						</div>
+						<div class="newSortCategoryButton newSortCategoryButtonToggle0" id="searchUiV3_5261a8fb3b773043d5000012" onclick="NewSortButtonPressed(this,0,'5261a8fb3b773043d5000012');" style="color:#b57ad3;">
+							<div class="newSortCategoryButtonInner"><img src="resources/v1/cat_games.svg" style="height:100%;" alt="Games"> Games </div>
+						</div>
+					</div>
+				</div>
+				<div class="horizSepContainer">
+					<div></div>
+					<span>Sort</span>
+					<div></div>
+				</div>
+				<div class="newSortSortContainer">
+					<div class="newSortCategoryButton newSortCategorySortButton newSortCategoryButtonSelected newSortCategoryButtonToggle1" id="searchUiV3_DATE" onclick="NewSortButtonPressed(this,1,'DATE');">
+						<div class="newSortCategoryButtonInner"><img src="resources/v1/sort_date.svg" style="height:100%;" alt="Date" > Date </div>
+					</div>
+					<div class="newSortCategoryButton newSortCategorySortButton newSortCategoryButtonToggle1" id="searchUiV3_POPULAR" onclick="NewSortButtonPressed(this,1,'POPULAR');">
+						<div class="newSortCategoryButtonInner"><img src="resources/v1/sort_popular.svg" style="height:100%;" alt="Popularity" > Popularity </div>
+					</div>
+					<div class="newSortCategoryButton newSortCategorySortButton newSortCategoryButtonToggle1" id="searchUiV3_NAME" onclick="NewSortButtonPressed(this,1,'NAME');">
+						<div class="newSortCategoryButtonInner"><img src="resources/v1/sort_name.svg" style="height:100%;" alt="Name" > Name </div>
+					</div>
+					<div class="newSortCategoryButton newSortCategorySortButton newSortCategoryButtonToggle1" id="searchUiV3_CATEGORY" onclick="NewSortButtonPressed(this,1,'RANDOM');">
+						<div class="newSortCategoryButtonInner"><img src="resources/v1/sort_shuffle.svg" style="height:100%;" alt="Shuffle"> Shuffle </div>
+					</div>
+				</div>
+				<div class="newSortSortContainer">
+					<div class="horizSepContainer">
+						<div></div>
+						<span>Page</span>
+						<div></div>
+					</div>
+					<div class="sortV3PageSelectSlider"><input type="range" min="1" max="100" value="0" class="slider" oninput="SortV3PageSliderMove(this.value);" id="sortV3PageSlider"></div>
+					<div class="sortV3PageSelectText" id="sortV3PageSliderText"> 000/000 </div>
+				</div>
+			</div>
+		</div>
+		<!-- End sort v3 -->
+
+		<!-- No JavaScript error message --> 
+		<noscript>
+			<div style="position:fixed; bottom:0; left:0; height:100%; width:100%; font-family: 'd-din'; background-color:#e8ebed; z-index:10000000;">
+				<div style="margin-top:160px; width:100%; height:100px; font-size:100px; text-align:center;"> :( </div>
+				<div style="margin-top:160px; width:100%; font-size:25px; text-align:center;"> <b>You don't have JavaScript enabled.</b><br> </div>
+				<div style="margin-top:10px; width:100%; font-size:20px; text-align:center;"> You need JavaScript for this website to work. <br> If you see this in the native app, let me know!<br> </div>
+				<div style="margin-top:45px; width:100%; color:#444444; font-size:15px; text-align:center;"> <img src="https://romanport.com/redirect/discord/logo_black.svg" style="vertical-align:middle" height="20" alt="Discord">  <a href="https://romanport.com/api/GeneralAPIs/out/?to=discord" target="_blank">Discord</a> </div>
+			</div>
+		</noscript>
+		<!-- End no JavaScript error message --> 
+
+		<!-- Begin apps list -->
+		
+		<div id="app-list-main">
+
+			<div class="main_container drop_shadow" id="appsList">
+				<div class="applist_sort_new" id="applist-bar-padding">
+					<!--This does nothing. It is just used to give this a nice margin.--> 
+				</div>
+				<!-- NEW mobille sort menu --> 
+				<div class="applist_sort_new applist_sort_new_fixed" id="applist-bar"> <img src="resources/sort.svg" width="30" alt="Sort" style="vertical-align:middle;" onclick="NewSortToggle();"> <!-- <img src="resources/favorite_white.svg" width="30" alt="Favorite" class="" style="vertical-align:middle; margin-left:10px;" onclick="ShowFavoriteApps();"> --> <img src="resources/info.svg" width="30" alt="Info" style="vertical-align:middle; float:right;" onclick="OpenInfoWindow();"> <img src="resources/code.svg" width="30" alt="Dev" id="devTools-btn" style="display:none" onclick="ShowDevMenu();"> </div>
+				<!-- End NEW mobille sort menu --> <!-- Desktop watchapps/watchface toggle --> 
+				<div class="main_chooser">
+					<div class="main_chooser_bar"> </div>
+					<div class="main_chooser_item" onclick="SwitchType(true);" style="float:left;" id="text_watchapps"> local </div>
+					<div class="main_chooser_item" onclick="SwitchType(false);" style="float:right;" id="text_watchfaces"> local </div>
+				</div>
+				<!-- End desktop watchapps/watchface toggle --> <!-- Nav buttons --> 
+				<div class="main_footer">
+					<div class="pebble_classic_button_sbs_container_nestedParent">
+						<div class="pebble_classic_button_sbs_container">
+							<div class="pebble_classic_button pebble_classic_button_sbs" id="prev_btn_1" onclick="PreviousButton();"> <span id="text_previous_page">local</span> </div>
+							<div class="pebble_classic_button pebble_classic_button_sbs" id="next_btn_1" onclick="NextButton();"> <span id="text_next_page">local</span> </div>
+							<div class="pebble_classic_button pebble_classic_button_sbs" id="AllAppsBtn" style="display:none;" onclick="StopShowingDevApps();"> <span id="text_page_allapps">local</span> </div>
+							<!--<div class="pebble_classic_button pebble_classic_button_sbs" onclick="DebuggingBtn(); "> <span id="text_page_debug">local </span></div>--> 
+						</div>
+					</div>
+					<div class="mobile_sort_contaner"> </div>
+				</div>
+				<!-- End nav buttons --> <!-- App list area --> 
+				<div class="app_list" id="app_list" style="min-height:5000px;">
+					<!-- This is jank. We have the min height set high, generate the list, then set it to auto before the user can find out. --> 
+					<ul id="app_list_ul" style="overflow:unset;"> </ul>
+					<div style="display:none;" id="endOfPage-easter-egg" class="endOfPage-easter-egg-container">
+						<h1 class="endOfPage-easter-egg">...and in the beginning, there was nothing.</h1>
+					</div>
+				</div>
+				<!-- End app list area --> <!-- Bottom nav buttons --> 
+				<div class="main_footer" id="main_footer">
+					<div class="pebble_classic_button_sbs_container_nestedParent">
+						<div class="pebble_classic_button_sbs_container">
+							<div class="pebble_classic_button pebble_classic_button_sbs" id="prev_btn_2" onclick="PreviousButton(); SmoothScrollToTop();"> <span id="2text_previous_page">local</span> </div>
+							<div class="pebble_classic_button pebble_classic_button_sbs" id="next_btn_2" onclick="NextButton(); SmoothScrollToTop();"> <span id="2text_next_page">local</span> </div>
+						</div>
+					</div>
+					<div class="mobile_sort_contaner"> </div>
+				</div>
+				<!-- End nav buttons --> 
+			</div>
+		
+		</div>
+		<!-- End apps list -->
+
+		<!-- App Data --> 
+		<div id="app-data-main" style="display:none;">
+			<div id="appdata-content" class="modal" >
+				<div class="modal-content drop_shadow" >
+					<div class="app_fullcard_header" >
+						<div id="app_icon_card" style="float:left; height:30px; padding:15px; padding-right:3px;"> </div>
+						<div class="app_fullcard_header_text" style="float:left; ">
+							<div style="height:50%; overflow:hidden;">
+								<div id="title_card"> App_Title </div>
+							</div>
+							<div style="height:50%" id="author_card" class="app_fullcard_header_text_suffix"> Author </div>
+						</div>
+						<!--<div class="app_fullcard_header_getbutton" id="getButtonInside" onclick="GetButtonPressed();"> <div style="width:50%; float:left; height:100%; display:inline-block; line-height:34px;"> <img height="19px" src="..resources/thumb_down.svg"> </div> <div style="width:50%; float:right; height:100%; display:inline-block; line-height:34px;"> <img height="19px" src="..resources/thumb_up.svg"> </div> </div>--> 
+						<div class="app_fullcard_header_getbutton" id="getButtonInside" onclick="GetButtonPressed();">
+							<!--<div id="text_add_pbw">ADD</div>--> ADD 
+						</div>
+						<div class="app_fullcard_header_getbutton" id="tryButton" style="display:none;" onclick="TryButtonPressed();"> TRY </div>
+					</div>
+					<div class="app_fullcard_banner" id="banner_card"> </div>
+					<div class="app_fullcard_quickTip">
+						<!-- This shows various bits of info like companion apps, and likes. --> 
+						<ul>
+							<li>
+								<div class="app_fullcard_quickTip_content" style="float:left;">
+									<!--Content--> 
+								</div>
+								<div class="app_fullcard_quickTip_divider" style="float:right;"> </div>
+							</li>
+							<li onclick="AddOrRemoveHeart();" style="cursor:pointer;">
+								<!--Content (heart container)--> 
+								<div class="app_fullcard_heart_container">
+									<div class="app_fullcard_heart">
+										<img src="..resources/favorite.svg" height="15" alt="Favorite" style="vertical-align:middle" id="heart_icon"> <span style="margin-left:2px;" id="hearts_amount"> 1000 </span> <br> 
+										
+										<span id="new_hearts_amount">
+											<div class="fadeLoader"></div>
+										</span>
+									</div>
+								</div>
+							</li>
+							<li>
+								<div class="app_fullcard_quickTip_content" style="float:right;">
+									<!--Content--> 
+								</div>
+								<div class="app_fullcard_quickTip_divider" style="float:left;"> </div>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="app_fullcard_screenshots" >
+				<div class="app_fullcard_screenshots_previewFrame"> </div>
+				<div class="main-carousel" id="screenshots_card"> </div>
+			</div>
+			<div class="modal">
+				<div class="modal-content drop_shadow" >
+					<div class="app_fullcard_description_header" id="text_app_description"> local </div>
+					<div class="app_fullcard_description" id="description_card"> </div>
+					<div class="app_fullcard_description_details app_fullcard_description">
+						<div class="app_fullcard_meta_prefix"> <span id="text_app_author">local</span><br> <span id="text_app_cat">local</span> <br> <span id="text_app_modDate">local</span> <br> <span id="text_app_modVersion">local</span></div>
+						<div style="float:left; margin-right:10px;" id="meta"> Blah <br> Blah </div>
+					</div>
+					<div class="app_fullcard_description" style="margin:0px; padding:0px; width:100%; min-height:0px; margin-top:5px;">
+						<!--Buttons at the bottom --> 
+						<ul>
+							<li class="app_fullcard_footerButton" onclick="OpenExternalURL(DecodeJSONUrlRequest(currentAppJSON.path_raw), '_blank');">
+								<div class="appDetails_MenuItem_Text" > View Raw JSON </div>
+								<div class="appDetails_MenuItem_Next appDetails_MenuItem_Text"> <img src="resources/next_arrow.svg" style="height:100%;" alt="Arrow"> </div>
+							</li>
+							<li class="app_fullcard_footerButton" onclick="OpenExternalURL('https://docs.google.com/forms/d/e/1FAIpQLSfSbEOSPM7SlPaCakzO361suATTwbev4Uxz_Cd7kO4oRLMrKA/viewform?entry.913311772='+currentAppJSON.id, '_blank');">
+								<div class="appDetails_MenuItem_Text" > Send Takedown Request </div>
+								<div class="appDetails_MenuItem_Next appDetails_MenuItem_Text"> <img src="resources/next_arrow.svg" style="height:100%;" alt="Arrow"> </div>
+							</li>
+							<li class="app_fullcard_footerButton" style="display:none;" id="download_android" onclick="TryOpenExternal(currentAppJSON.com_android);">
+								<div class="appDetails_MenuItem_Text"> Android Companion App </div>
+								<div class="appDetails_MenuItem_Next appDetails_MenuItem_Text"> <img src="resources/next_arrow.svg" style="height:100%;" alt="Arrow"> </div>
+							</li>
+							<li class="app_fullcard_footerButton" style="display:none;" id="download_ios" onclick="TryOpenExternal(currentAppJSON.com_ios);">
+								<div class="appDetails_MenuItem_Text" > iOS Companion App </div>
+								<div class="appDetails_MenuItem_Next appDetails_MenuItem_Text"> <img src="resources/next_arrow.svg" style="height:100%;" alt="Arrow"> </div>
+							</li>
+							<li class="app_fullcard_footerButton" id="websiteBtn" style="display:none;" onclick="OpenExternalURL(currentAppJSON.website,'_blank');">
+								<div class="appDetails_MenuItem_Text" > App Website </div>
+								<div class="appDetails_MenuItem_Next appDetails_MenuItem_Text"> <img src="resources/next_arrow.svg" style="height:100%;" alt="Arrow"> </div>
+							</li>
+							<li class="app_fullcard_footerButton" id="moreFromDevBtn" style="display:none;" onclick="MoreFromDevBtn();">
+								<div class="appDetails_MenuItem_Text" > More from the Developer </div>
+								<div class="appDetails_MenuItem_Next appDetails_MenuItem_Text"> <img src="resources/next_arrow.svg" style="height:100%;" alt="Arrow"> </div>
+							</li>
+							<li class="app_fullcard_footerButton" id="sourceBtn" style="display:none;" onclick="OpenExternalURL(currentAppJSON.appSource,'_blank');">
+								<div class="appDetails_MenuItem_Text" > Source </div>
+								<div class="appDetails_MenuItem_Next appDetails_MenuItem_Text"> <img src="resources/next_arrow.svg" style="height:100%;" alt="Arrow"> </div>
+							</li>
+							<li class="app_fullcard_footerButton" id="pbwDownloadBtn" onclick="DownloadFile(DecodeJSONUrlRequest(currentAppJSON.path_pbw));">
+								<div class="appDetails_MenuItem_Text" id="downloadPbwFileBtn"> Download PBW File </div>
+								<div class="appDetails_MenuItem_Text appDetails_MenuItem_Next"> <img src="resources/next_arrow.svg" style="height:100%;" alt="Arrow"> </div>
+							</li>
+						</ul>
+					</div>
+					<!--<div class="app_fullcard_footer" id="footer_card"> </div>--> 
+				</div>
+			</div>
+		</div>
+		<!-- End app data -->
+
+		<!-- Footer --> 
+		<div class="bottom_footer"> Created by <a href="https://romanport.com">Roman Port</a> <br> <span> <br> Not associated with Pebble or Fitbit <br> Unless this page is under RomanPort.com, I'm not moderating it <br> The font <a href="https://www.fontsquirrel.com/fonts/d-din">'D-DIN'</a> is licensed under <a href="https://www.fontsquirrel.com/license/d-din">'SIL Open Font License'</a> <br> <a href="https://romanport.com/api/GeneralAPIs/out/?to=discord">Contact Me</a> | <u><a onclick="ShowDevMenu();">Developer Menu</a></u><br> Some icons made by Freepik from <u><a onclick="OpenExternalURL('https://www.flaticon.com')">www.flaticon.com</a></u>. </span> </div>
+		<!-- End footer --> 
+		
+		<!-- Script init -->
+		
+		<script type="text/javascript" src="https://code.jquery.com/jquery-1.7.1.min.js"></script>
+		<script type="text/javascript" src="assets/v1/java.js"></script>
+		<script type="text/javascript" src="assets/v1/PblNative.js"></script>
+		<script type="text/javascript" src="assets/v1/dataBridge.js"></script>
+		<script type="text/javascript" src="assets/v1/shared.js"></script>
+		<script type="text/javascript" src="assets/v1/storage.js"></script>
+		<script src="https://romanport.com/api/PebbleRipper/assets/flickity.js"></script>
+		<script type="text/javascript" src="assets/v1/application.js"></script>
+		<!-- End script init --> 
+	</body>
+</html>
