@@ -1,3 +1,7 @@
+# THIS REPOSITORY IS NOT UP TO DATE!
+If you'd like to use this appstore, you should access the work in progress version at https://pebble-appstore.romanport.com .
+
+
 # RomanPort's Pebble Appstore
 A replacement Pebble appstore I've been working on for the last few motnhs. It works in a web browser or the native Pebble app.
 
